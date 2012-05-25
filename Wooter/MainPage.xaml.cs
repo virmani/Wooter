@@ -146,12 +146,22 @@ namespace Wooter
 
         private void AddPanoramaItems()
         {
-            Dispatcher.BeginInvoke(() => { panorama1.Items.Add(wootDictionary[WootType.JustWoot]); eventsArray[0].Set(); });
-            Dispatcher.BeginInvoke(() => { panorama1.Items.Add(wootDictionary[WootType.ShirtWoot]); eventsArray[1].Set(); });
-            Dispatcher.BeginInvoke(() => { panorama1.Items.Add(wootDictionary[WootType.WineWoot]); eventsArray[2].Set(); });
-            Dispatcher.BeginInvoke(() => { panorama1.Items.Add(wootDictionary[WootType.KidsWoot]); eventsArray[3].Set(); });
-            Dispatcher.BeginInvoke(() => { panorama1.Items.Add(wootDictionary[WootType.SelloutWoot]); eventsArray[4].Set(); });
-            Dispatcher.BeginInvoke(() => { panorama1.Items.Add(wootDictionary[WootType.HomeWoot]); eventsArray[5].Set(); });
+            Dispatcher.BeginInvoke(() => { AddPanoramaFromWootDictionary(WootType.JustWoot, eventsArray[0]); });
+            Dispatcher.BeginInvoke(() => { AddPanoramaFromWootDictionary(WootType.ShirtWoot, eventsArray[1]); });
+            Dispatcher.BeginInvoke(() => { AddPanoramaFromWootDictionary(WootType.WineWoot, eventsArray[2]); });
+            Dispatcher.BeginInvoke(() => { AddPanoramaFromWootDictionary(WootType.KidsWoot, eventsArray[3]); });
+            Dispatcher.BeginInvoke(() => { AddPanoramaFromWootDictionary(WootType.SelloutWoot, eventsArray[4]); });
+            Dispatcher.BeginInvoke(() => { AddPanoramaFromWootDictionary(WootType.HomeWoot, eventsArray[5]); });
+        }
+
+        private void AddPanoramaFromWootDictionary(WootType wootType, AutoResetEvent resetEvent)
+        {
+            PanoramaItem wootPanoramaItem;
+            if (wootDictionary.TryGetValue(wootType, out wootPanoramaItem))
+            {
+                panorama1.Items.Add(wootPanoramaItem);
+            }
+            resetEvent.Set();
         }
 
         private void AddWootPivotItem(WootType wootType)
@@ -174,8 +184,8 @@ namespace Wooter
 
         private void PopulateWoot(IAsyncResult asyncResult)
         {
-            WebRequestToken userToken = asyncResult.AsyncState as WebRequestToken;
-            WootPivotData wootPivotData = userToken.UserToken as WootPivotData;
+            WebRequestToken userToken = (WebRequestToken)asyncResult.AsyncState;
+            WootPivotData wootPivotData = (WootPivotData)userToken.UserToken;
 
             HttpWebResponse response = null;
             try
@@ -184,24 +194,45 @@ namespace Wooter
                 using (StreamReader streamReader1 = new StreamReader(response.GetResponseStream()))
                 {
                     string resultString = streamReader1.ReadToEnd();
+
                     DrawItemsFromWootData(resultString, wootPivotData.WootType,
                         wootPivotData.PanoramaControl, wootPivotData.ResetEvent);
                 }
             }
             catch (WebException ex)
             {
-                var responseFormat = "WebException While reading the Http response in the callback. \r\n Response: {0}";
-                string resultString = "<empty>";
+                bool continuingAfterFailure = wootPivotData != null && wootPivotData.ResetEvent != null;
 
-                using (StreamReader streamReader = new StreamReader(ex.Response.GetResponseStream()))
+                var attributes = new Dictionary<string, string>();
+                attributes.Add(UserTrackingEvents.AttributeNames.WootType, wootPivotData != null ? wootPivotData.WootType.ToString() : "null");
+                attributes.Add(UserTrackingEvents.AttributeNames.ContinuingAfterWootFetchFailure, continuingAfterFailure.ToString());
+                AppSession.TagWooterEvent(UserTrackingEvents.FailedToDownloadAWoot, attributes);
+
+                // TODO: Implement retries.
+                if (continuingAfterFailure)
                 {
-                    if (streamReader != null)
-                    {
-                        resultString = streamReader.ReadToEnd();
-                    }
+                    // Could not load data for this woot. Don't display it and move on. DO NOT creash the whole app.
+                    wootPivotData.ResetEvent.Set();
                 }
+                else
+                {
 
-                throw new ApplicationCrashException(string.Format(responseFormat, resultString), ex);
+                    var responseFormat = "WebException While reading the Http response in the callback. \r\n Response: {0}";
+                    string resultString = "<empty>";
+
+                    if (ex.Response != null)
+                    {
+                        using (StreamReader streamReader = new StreamReader(ex.Response.GetResponseStream()))
+                        {
+                            if (streamReader != null)
+                            {
+                                resultString = streamReader.ReadToEnd();
+                            }
+                        }
+                    }
+
+                    throw new ApplicationCrashException(string.Format(responseFormat, resultString), ex);
+                }
             }
             catch (Exception ex)
             {
@@ -268,7 +299,7 @@ namespace Wooter
                 attributes.Add(UserTrackingEvents.AttributeNames.WootType, wootType.ToString());
                 if (!string.IsNullOrWhiteSpace(result))
                 {
-                    attributes.Add(UserTrackingEvents.AttributeNames.ResponseLine, 
+                    attributes.Add(UserTrackingEvents.AttributeNames.ResponseLine,
                         result.Length >= UserTrackingEvents.SubStringLength ? result.Substring(0, UserTrackingEvents.SubStringLength) : result);
                 }
                 AppSession.TagWooterEvent(UserTrackingEvents.DocTypeFound, attributes);

@@ -12,6 +12,7 @@
         public const string AdditionalPhotosPressed = "Additional Photos Pressed";
         public const string DocTypeFound = "DocType was found";
 
+        public const string FailedToDownloadAWoot = "Woot Fetch Failure";
         public const string NetworkNotAvailable = "Network Not Available";
         public const string TimedOutWaitingForWebResponse = "Timed Out Waiting For Web Response";
         public const string TimedOutWaitingForRender = "Timed Out Waiting For Render";
@@ -26,6 +27,7 @@
             public const string InnerExceptionType = "InnerExceptionType";
             public const string InnerExceptionMessage = "InnerExceptionMessage";
             public const string InnerStackTrace = "InnerStackTrace";
+            public const string ContinuingAfterWootFetchFailure = "ContinuingAfterWootFetchFailure";
 
             public const string TotalLoadTime = "ApplicationLoadTime";
 

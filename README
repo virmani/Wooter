@@ -1,0 +1,11 @@
+FINALLY, I got around to putting Wooter up on Git!
+
+Here is some description of the source tree:
+
+1) packages: Contains the Nuget packages used in the project
+2) Submit: Metadata images submitted to the AppHub.
+3) Wooter: Wooter is the main project that contains the whole application including:
+	a) WootControl - the control that displays a particular woot on one of the panorama items.
+	b) All the logic to fetch the rss on background threads and render them on the Panorama.
+
+4) WootCaller: WootCaller project contains the logic to make the HTTP call and fetch the raw response. It then reads the RSS feed and converts it into an object that is consumed by the Wooter project.

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{2c2fb3cf-8b0d-407f-b12b-df326238d4cc}" Title="Wooter" RuntimeType="Silverlight" Version="1.6.0.0" Genre="apps.normal" Author="AppMania" Description="" Publisher="AppMania">
+  <App xmlns="" ProductID="{2c2fb3cf-8b0d-407f-b12b-df326238d4cc}" Title="Wooter" RuntimeType="Silverlight" Version="1.7.0.0" Genre="apps.normal" Author="AppMania" Description="" Publisher="AppMania">
     <IconPath IsRelative="true" IsResource="false">TileIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
