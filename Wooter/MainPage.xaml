@@ -1,0 +1,42 @@
+﻿<phone:PhoneApplicationPage xmlns:my="clr-namespace:Wooter" 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=mscorlib"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
+    x:Class="Wooter.MainPage"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="True" 
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls" Loaded="OnMainPageLoaded">
+
+    <!--<phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="globalApplicationBar" 
+                              Mode="Minimized" Opacity="0.05">
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="Share" />
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>-->
+
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <StackPanel x:Name="LayoutRoot" Background="Transparent">
+        <controls:Panorama HorizontalAlignment="Left" Name="panorama1" 
+            VerticalAlignment="Top" Background="#FF61861E" Margin="0">
+            <controls:Panorama.Title>
+                <StackPanel Orientation="Horizontal" Margin="0,80,0,0">
+                    <Image Source="AppNameHeader.png" Height="130"/>
+                </StackPanel>
+            </controls:Panorama.Title>
+
+        </controls:Panorama>
+
+    </StackPanel>
+
+</phone:PhoneApplicationPage>
