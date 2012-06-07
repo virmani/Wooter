@@ -1,6 +1,6 @@
-FINALLY, I got around to putting Wooter up on Git!
+Get Wooter on your windows phone here: http://www.windowsphone.com/en-us/apps/4b008405-08dc-df11-a844-00237de2db9e
 
-Here is some description of the source tree:
+Finally, I got around to putting Wooter up on Git! Here is some description of the source tree:
 
 1) packages: Contains the Nuget packages used in the project
 2) Submit: Metadata images submitted to the AppHub.
